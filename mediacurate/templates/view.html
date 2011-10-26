@@ -1,0 +1,27 @@
+{%extends "base.html"%}
+{% load comments %}
+
+{%block title%}{{media.title}}{%endblock%}
+
+{%block content%}
+
+<div id="title">
+  {{media.title}}
+</div>
+
+<div id="embed">
+{{media.embed.html|safe}}
+</div>
+
+<div id="info">
+  <ul>
+    <li>Vote</li>
+    <li>Flag</li>
+    <li>Tag</li>
+  </ul>
+</div>
+
+<div id="reviews">
+  {% render_comment_list for media %}
+</div>
+{%endblock%}

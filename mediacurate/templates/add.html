@@ -1,0 +1,65 @@
+{%extends "base.html"%}
+
+{%block title%}Add something{%endblock%}
+
+{%block style%}
+<link rel="stylesheet" href="{{MEDIA_URL}}css/jquery.autocomplete.css" type="text/css" />
+<style>
+  .error { color:red; }
+</style>
+{%endblock%}
+
+{%block script%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+<script src="{{MEDIA_URL}}js/django_csrf.js"></script>
+<script src="{{MEDIA_URL}}js/jquery.slugify.js"></script>
+<script src="{{MEDIA_URL}}js/jquery.autocomplete.js"></script>
+<script type="text/javascript" src="{{MEDIA_URL}}js/add_media.js"></script>
+{%endblock%}
+
+{%block content%}
+  {% if message %}
+  <div id="message">
+  {{message|safe}}
+  </div>
+  {%endif%}
+  
+  Add Form 
+  
+  <form id="addform" action="" method="POST">
+    {% csrf_token %}
+  {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+      {% for fieldset in form.fieldsets %}
+        <fieldset class="{{ fieldset.classes }}">
+        {% if fieldset.legend %}
+          <legend>{{ fieldset.legend }}</legend>
+        {% endif %}
+        {% if fieldset.description %}
+          <p class="description">{{ fieldset.description }}</p>
+        {% endif %}
+        <ul>
+        {% for field in fieldset %}
+          {% if field.is_hidden %}
+            {{ field }}
+          {% else %}
+            <li{{ field.row_attrs }} {% if field.errors %}class="error"{%endif%}>
+              {{ field.label_tag }}
+              {{ field }}
+            </li>
+          {% endif %}
+          {% if fieldset.name == "URL" %}
+            <input id="id_preview_button" type="button" value="preview" />
+            <div id="preview" style="display:none;">
+              <label>Preview</label>
+              <div class="spinner">wait for it...</div>
+              <div id="preview_html"></div>
+              <div id="preview_description"></div>
+            </div>
+          {%endif%}
+        {% endfor %}
+        </ul>
+        </fieldset>
+      {% endfor %}
+      <input id="addform_submit" type="submit" value="submit"/>
+    </form>
+{%endblock%}
