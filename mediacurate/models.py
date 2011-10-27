@@ -49,6 +49,11 @@ class Media(models.Model):
         verbose_name_plural = "Media"
         get_latest_by = 'date_added'
 
+    def get_total_upvotes(self):
+        #covenience method for admin, not sure why I have to do the queryset
+        return Media.objects.get(id=self.id).total_upvotes
+    get_total_upvotes.short_description = "Upfists"
+
     def is_highres(self):
         if self.resolution:
             w,h = self.resolution.split('x')

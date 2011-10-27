@@ -16,12 +16,15 @@ from mediacurate.forms import AddForm
 
 def home(request):
     if Media.objects.filter(featured=True).count() > 0:
-        media = Media.objects.filter(featured=True).latest()
+        main = Media.objects.filter(featured=True).latest()
     else:
-        media = Media.objects.all().order_by('vote_total').latest()
+        main = Media.objects.order_by('total_upvotes','date_added')[0]
+    latest = Media.objects.order_by('date_added').exclude(id=main.id)[:5]
+    popular = Media.objects.order_by('total_upvotes').exclude(id=main.id)[:5]
     
     return render_to_response('view.html',
-        {'media':media},
+        {'title':'The best source for #occupy videos',
+        'media':main,'popular':popular,'latest':latest},
         context_instance=RequestContext(request))
     
 def latest(request,offset=None):

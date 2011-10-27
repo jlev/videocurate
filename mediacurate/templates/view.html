@@ -1,13 +1,13 @@
 {%extends "base.html"%}
 {% load comments %}
+{% load humanize %}
 
-{%block title%}{{media.title}}{%endblock%}
+{%block title%}{%if title%}{{title}}{%else%}{{media.title}}{%endif%}{%endblock%}
 
 {%block content%}
-
-<div id="title">
+<h1>
   {{media.title}}
-</div>
+</h1>
 
 <div id="embed">
 {{media.embed.html|safe}}
@@ -24,4 +24,28 @@
 <div id="reviews">
   {% render_comment_list for media %}
 </div>
+{%endblock%}
+
+{%block aside %}
+<h3>Popular</h3>
+<ul>
+{% for media in popular%}
+<li>
+  <h4><a href="{{media.get_absolute_url}}">{{media.title}}</a></h4>
+  <a href="{{media.get_absolute_url}}"><img src="{{media.embed.response.thumbnail_url}}" width="100"></a>
+  <div class="info">{{media.description}}<br>{{media.views|intcomma}} views {{media.total_upvotes}} <img src="{{MEDIA_URL}}images/upfist_small.png"/></div>
+  </li>
+{%endfor%}
+</ul>
+
+<h3>Latest</h3>
+<ul>
+{% for media in latest%}
+<li>
+  <h4><a href="{{media.get_absolute_url}}">{{media.title}}</a></h4>
+  <a href="{{media.get_absolute_url}}"><img src="{{media.embed.response.thumbnail_url}}" width="100"></a>
+  <div class="info">{{media.description}}<br>{{media.views|intcomma}} views {{media.total_upvotes}} <img src="{{MEDIA_URL}}images/upfist_small.png"/></div>
+</li>
+{%endfor%}
+</ul>
 {%endblock%}

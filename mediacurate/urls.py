@@ -16,5 +16,6 @@ urlpatterns = patterns('mediacurate.views',
 )
 
 urlpatterns += patterns('secretballot.views',
-    (r'^vote/(?P<object_id>[\d]+)/(?P<vote>[\d]+)/$', 'vote'),
+    url(r'^view/vote/(?P<object_id>[\d]+)/(?P<vote>[-\d]+)/$', 'vote', kwargs={'content_type':'mediacurate.media'}),
+    url(r'^comment/vote/(?P<object_id>[\d]+)/(?P<vote>[-\d]+)/$', 'vote', kwargs={'content_type':'comments.comment'}),
 )

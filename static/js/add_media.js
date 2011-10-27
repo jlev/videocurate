@@ -1,3 +1,5 @@
+DEBUG = false;
+
 $(document).ready(function onload(){
   //enable the preview button
   $("input#id_url").keypress(function(e){
@@ -12,9 +14,10 @@ $(document).ready(function onload(){
     if (theURL == "") { $("label[for=id_url]").addClass("error"); return false; }
     else { $("label[for=id_url]").removeClass("error"); }
     $("#preview").show();
-    $.post("/embed/cache/",{url:theURL},
+    $.post("/embed/cache/",{url:theURL,maxwidth:"600"},
       function embedly_callback(data) {
-        console.log(data);
+        if (DEBUG) console.log('embedly callback');
+        if (DEBUG) console.log(data);
         $('#preview #preview_html').html(data.html);
         $('#addform #id_title').val(data.title);
         $('#addform #id_author_name').val(data.author_name);
@@ -64,8 +67,8 @@ function youtube_extras(data) {
   youtube_extra = $.get("https://gdata.youtube.com/feeds/api/videos?",
     {q:youtube_query,max_results:1,v:2,alt:'json'},
     function youtube_callback(response) {
-      console.log('youtube callback');
-      console.log(response);
+      if (DEBUG) console.log('youtube callback');
+      if (DEBUG) console.log(response);
       extra = {}
       entry = response.feed.entry[0];
       extra.views = entry.yt$statistics.viewCount;
@@ -101,22 +104,19 @@ function vimeo_extras(data) {
                   });
 }
 function flickr_extras(data) {
-  console.log(data);
   //use regex to determine photo_id
   flickr_regex = RegExp('photos/[^/]+/([0-9]+)')
   photo_id = flickr_regex.exec(data.original_url)[1]
-  console.log(photo_id);
   api_key = 'fd34c2ff0085800fd5c78c24c2b26f66'
   flickr_url = "http://www.flickr.com/services/rest/?method=flickr.photos.getInfo&format=json" +
               "&photo_id=" + photo_id +
               "&api_key=" + api_key;
-  console.log(flickr_url);
   flickr_extra = $.ajax({url:flickr_url,
                     dataType:'jsonp',
                     jsonp:'jsoncallback',
                     success: function flickr_callback(response,status,jqXHR) {
-                      console.log('flickr callback');
-                      console.log(response);
+                      if (DEBUG) console.log('flickr callback');
+                      if (DEBUG) console.log(response);
                       flickr_license = response.photo.license;
                       //see http://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html
                       switch(flickr_license) {

@@ -6,7 +6,7 @@ class MediaAdmin(admin.ModelAdmin):
     ordering = ('date_added',)
     raw_id_fields = ('embed',)
     
-    list_display = ('title','location','date_uploaded','date_added','resolution')
+    list_display = ('title','location','date_uploaded','date_added','resolution','get_total_upvotes','featured')
     list_filter = ('date_uploaded','location','featured')
     search_fields = ('title','location__name','tags')
     fieldsets = (
